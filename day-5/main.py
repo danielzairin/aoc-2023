@@ -29,20 +29,26 @@ def part1(lines):
                 i += 1
             mapIndex += 1
 
+    def searchMap(currentValue, currentMapIndex):
+        if currentMapIndex == len(mapEntries):
+            return currentValue
+        
+        nextValue = currentValue
+        nextMapIndex = currentMapIndex + 1
+        
+        for entry in mapEntries[currentMapIndex]:
+            destinationStart, sourceStart, length = entry
+            if currentValue >= sourceStart and currentValue < sourceStart + length:
+                offset = currentValue - sourceStart
+                nextValue = destinationStart + offset
+                break
+        
+        return searchMap(nextValue, nextMapIndex)
+
     result = float("inf")
 
     for seed in seeds:
-        currentValue = seed
-
-        for mapIndex in range(len(mapEntries)):
-            for entry in mapEntries[mapIndex]:
-                destinationStart, sourceStart, length = entry
-                if currentValue >= sourceStart and currentValue < sourceStart + length:
-                    offset = currentValue - sourceStart
-                    currentValue = destinationStart + offset
-                    break
-        
-        result = min(currentValue, result)
+        result = min(searchMap(seed, 0), result)
     
     print(f"part 1 = {result}")
         
