@@ -1,0 +1,12 @@
+{
+  "name": "day-7",
+  "scripts": {
+    "start": "tsx main.ts",
+    "test": "tsc --noEmit && node --import tsx --test *.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "tsx": "^4.7.3",
+    "typescript": "^5.4.5"
+  }
+}
