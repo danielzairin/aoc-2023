@@ -1,0 +1,11 @@
+{
+  "name": "day-8",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}
