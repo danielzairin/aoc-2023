@@ -66,8 +66,6 @@ export function getHandTypeP2(hand: string): HandTypeValue {
         .sort((a, b) => CARD_VALUE[b] - CARD_VALUE[a])[0];
     }
 
-    console.log(`${hand} -> ${hand.replaceAll("J", mostFreq)}`);
-
     return getHandType(hand.replaceAll("J", mostFreq));
   }
 
