@@ -64,50 +64,6 @@ const opposite = (direction) => {
   throw Error(`invalid direction ${direction}`);
 };
 
-/**
- * @param {string[][]} map
- * @param {number} x
- * @param {number} y
- * @param {"N" | "E" | "S" | "W"} from
- * @param {number} distance
- * @param {boolean[][]} visited
- * @returns {number}
- */
-function walk(map, x, y, from, distance, visited) {
-  if (map[y][x] === "S") {
-    return distance;
-  }
-
-  if (visited[y][x]) {
-    throw Error(
-      `this pipe has already been visited, coordinates: (${x}, ${y})`
-    );
-  }
-
-  visited[y][x] = true;
-
-  const pipe = pipes.find((p) => p.shape === map[y][x]);
-
-  if (!pipe) {
-    throw Error(`unknown pipe ${map[y][x]}`);
-  }
-
-  const movement = pipe.move.find((m) => m.from === from);
-
-  if (!movement) {
-    throw Error(`unknown movement from ${from} for pipe ${pipe.shape}`);
-  }
-
-  return walk(
-    map,
-    x + movement.dx,
-    y + movement.dy,
-    opposite(movement.to),
-    distance + 1,
-    visited
-  );
-}
-
 const lines = fs.readFileSync("input.txt", "utf-8").split("\n");
 
 /** @type {{x: number, y: number} | null} */
@@ -139,6 +95,36 @@ for (let i = 0; i < visited.length; i++) {
 }
 
 visited[start.y][start.x] = true;
-const res = walk(map, start.x, start.y + 1, "N", 1, visited);
+let distance = 1;
+/** @type {{x: number, y: number}} */
+let current = { x: start.x, y: start.y + 1 };
+/** @type {"N" | "W" | "E" | "S"} */
+let from = "N";
 
-console.log({ res });
+while (map[current.y][current.x] !== "S") {
+  if (visited[current.y][current.x]) {
+    throw Error(
+      `this pipe has already been visited, coordinates: (${current.x}, ${current.y})`
+    );
+  }
+
+  visited[current.y][current.x] = true;
+
+  const pipe = pipes.find((p) => p.shape === map[current.y][current.x]);
+
+  if (!pipe) {
+    throw Error(`unknown pipe ${map[current.y][current.x]}`);
+  }
+
+  const movement = pipe.move.find((m) => m.from === from);
+
+  if (!movement) {
+    throw Error(`unknown movement from ${from} for pipe ${pipe.shape}`);
+  }
+
+  current = { x: current.x + movement.dx, y: current.y + movement.dy };
+  from = opposite(movement.to);
+  distance++;
+}
+
+console.log(`part 1 = ${Math.ceil(distance / 2)}`);
